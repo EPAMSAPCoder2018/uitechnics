@@ -1,0 +1,26 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form">
+	<Popover title="{mapData>carName} {mapData>carModel} {mapData>VIN}" class="sapUiContentPadding" placement="Bottom">
+		<VBox class="sapUiSmallMargin">
+			<f:SimpleForm editable="false" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="3" labelSpanS="12"
+				adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1"
+				singleContainerFullSize="true">
+				<f:content>
+					<Label text="{i18n>TechnicsName}"/>
+					<Text text="{mapData>carName}"/>
+					<Label text="{i18n>TechnicsModel}"/>
+					<Text text="{mapData>carModel}"/>
+					<Label text="{i18n>TechnicsVin}"/>
+					<Text text="{mapData>VIN}"/>
+					<Label text="{i18n>TechnicsSpeed}"/>
+					<Text text="{mapData>avgSpeed}"/>
+				</f:content>
+			</f:SimpleForm>
+		</VBox>
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button text="{i18n>ShowDetails}" press="handleEmailPress"/>
+			</Toolbar>
+		</footer>
+	</Popover>
+</core:FragmentDefinition>
