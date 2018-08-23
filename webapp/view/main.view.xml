@@ -13,7 +13,8 @@
 					</OverflowToolbar>
 				</subHeader>
 				<content>
-					<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651" zoomChanged="onZoomChanged">
+					<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="71.428028;51.134140" zoomChanged="onZoomChanged"
+						legendVisible="{technicalModel>/legendVisible}">
 						<vbm:vos>
 							<vbm:Spots posChangeable="true" scaleChangeable="false" contextMenu="onSpotContextMenuItem" items="{ path: 'mapData>/spots'}">
 								<vbm:items>
@@ -23,16 +24,24 @@
 							</vbm:Spots>
 						</vbm:vos>
 						<vbm:legend>
-							<vbm:Legend id="technicsLegend" caption="{i18n>AvailableTechnics}" items="{mapData>/spots}">
+							<vbm:Legend id="technicsLegend" caption="{i18n>Legend}" items="{ path: 'technicalModel>/legend'}">
 								<vbm:items>
-									<vbm:LegendItem text="{='Car ' + ${mapData>index}}" semanticSpotType="{mapData>status}" click="onLegendItemClick"/>
-								</vbm:items>
+									<vbm:LegendItem text="{technicalModel>description}" semanticSpotType="{technicalModel>state}"/>
+								</vbm:items>		
 							</vbm:Legend>
+							<!--<vbm:Legend id="technicsLegend" caption="{i18n>AvailableTechnics}" items="{mapData>/spots}">-->
+							<!--	<vbm:items>-->
+							<!--		<vbm:LegendItem text="{='Техника ' + ${mapData>carId}}" semanticSpotType="{mapData>status}" click="onLegendItemClick"/>-->
+							<!--	</vbm:items>-->
+							<!--</vbm:Legend>-->
 						</vbm:legend>
 					</vbm:GeoMap>
 				</content>
 				<footer>
-					<Toolbar></Toolbar>
+					<Toolbar>
+						<ToolbarSpacer/>
+						<ToggleButton text="{i18n>Legend}" pressed="{technicalModel>/legendVisible}"/>
+					</Toolbar>
 				</footer>
 			</Page>
 		</pages>

@@ -7,6 +7,10 @@ sap.ui.define([
 
 	return Controller.extend("com.epam.uitechnics.controller.main", {
 		onInit: function () {
+			var component = this.getOwnerComponent();
+			var i18n = component.getModel("i18n");
+			var navigationParameter = component.getComponentData();
+			var carId = navigationParameter.startupParameters.carId;
 			var oMap = this.getMapControl();
 			var oMapConfig = {
 				"MapProvider": [{
@@ -38,12 +42,28 @@ sap.ui.define([
 			mapDataModel.setData({
 				spots: []
 			});
+			var technicalModel = Models.createMapDataModel();
+			technicalModel.setProperty("/legendVisible", false);
+			technicalModel.setProperty("/legend", [{
+				color: "rgb(0,255,0)",
+				state: "Success",
+				description: i18n.getProperty("Works")
+			}, {
+				color: "rgb(240,255,0)",
+				state: "Warning",
+				description: i18n.getProperty("OnHold")
+			}, {
+				color: "rgb(152,152,152)",
+				state: "Error",
+				description: i18n.getProperty("Broken")
+			}]);
+			this.getView().setModel(technicalModel, "technicalModel");
 			this.getView().setModel(Models.createTechnicFiltersModel.apply(this), "technicsFiltersModel");
 			this.getView().setModel(mapDataModel, "mapData");
 			this._mapDataLoadingTask = this.createPeriodicalyTask(function () {
 				$.ajax({
 					type: "GET",
-					url: "/services/getCarsCurrentPositions.xsjs",
+					url: "/services/getCarsCurrentPositions.xsjs" + (carId ? ("?carId=" + carId) : ""),
 					async: false,
 					success: function (data, textStatus, jqXHR) {
 						var statuses = {
@@ -58,7 +78,7 @@ sap.ui.define([
 						mapDataModel.setProperty("/spots", data.results);
 					},
 					error: function (data, textStatus, jqXHR) {
-						alert("error to post " + textStatus);
+						console.log("error to post " + textStatus, jqXHR, data);
 					}
 				});
 			}, 5000);
@@ -104,8 +124,6 @@ sap.ui.define([
 			var oMapLegend = this.getMapLegend();
 			var binding = oMap.getAggregation("vos")[0].getBinding("items");
 			var key = evt.getParameters().selectedItem.getKey();
-			oMap.setCenterPosition("27.554899;53.904651");
-			oMap.setZoomlevel(12);
 			if (key === "All") {
 				oMapLegend.getBinding("items").filter([]);
 				binding.filter([]);
@@ -136,7 +154,7 @@ sap.ui.define([
 				path: evt.getSource().getBindingContext("mapData").getPath(),
 				model: "mapData"
 			});
-			that._oPopover.setPlacement("PreferredRightOrFlip");
+			that._oPopover.setPlacement("HorizontalPreferredRight");
 
 			setTimeout(function () {
 				that._oPopover.openBy(that._spotDetailPointer);
